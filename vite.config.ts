@@ -9,6 +9,9 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'xstate-paths',
       fileName: format => `xstate-paths.${format}.js`
+    },
+    rollupOptions: {
+      external: ['xstate'],
     }
   }
 });

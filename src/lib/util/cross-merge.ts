@@ -18,3 +18,18 @@ export function crossMerge<TLeft extends object, TRight extends object = object>
   const set = new Set(result.map(item => JSON.stringify(item)));
   return Array.from(set).map(item => JSON.parse(item));
 }
+
+
+/**
+ * Same as `crossMerge`, but returns a generator instead of an array.
+ * 
+ * @param itemsLeft 
+ * @param itemsRight 
+ */
+export function* crossMergeGenerator<TLeft extends object, TRight extends object = object>(itemsLeft: any[], itemsRight: any[]): Generator<(TRight & TLeft)> {
+  for (const itemLeft of itemsLeft) {
+    for (const itemRight of itemsRight) {
+      yield { ...itemLeft, ...itemRight };
+    }
+  }
+}

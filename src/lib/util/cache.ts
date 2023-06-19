@@ -1,5 +1,5 @@
 
-// Map an object to a cache Map
+// Map an object to a property cache
 const propertyCache = new WeakMap<any, Map<any, any>>();
 
 /**

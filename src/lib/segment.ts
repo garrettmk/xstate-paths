@@ -9,7 +9,6 @@ import { cache } from "./util/index.js";
  * the resulting state.
  */
 export class Segment {
-
   /**
    * 
    * @param machine The machine used to `transition` between states.

@@ -20,6 +20,11 @@ export class EventGenerator {
       this.sources.set(type, this.getGenerator(opts));
   }
 
+  /**
+   * Returns a generator that yields all events that will cause `fromState` to transition.
+   * 
+   * @param fromState 
+   */
   public * generateNextEvents(fromState: AnyState): Generator<AnyEventObject> {
     for (const type of fromState.nextEvents) {
       for (const event of this.generateEvents(type))
@@ -27,6 +32,11 @@ export class EventGenerator {
     }
   }
 
+  /**
+   * Returns a generator that yields events of the given type.
+   * 
+   * @param type 
+   */
   public * generateEvents(type: string): Generator<AnyEventObject> {
     const source = this.sources.get(type);
 
@@ -37,6 +47,12 @@ export class EventGenerator {
       yield { type };
   }
 
+  /**
+   * Returns an `EventGeneratorFn` for the given source.
+   * 
+   * @param source 
+   * @returns 
+   */
   protected getGenerator(source: EventSource): EventGeneratorFn {
     if (Array.isArray(source))
       return () => generatorFromArray(source);

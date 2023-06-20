@@ -50,7 +50,7 @@ export class Path {
    * @param options 
    * @returns 
    */
-  public static async makePaths(machine: AnyStateMachine, events: EventGenerator, options?: MakePathOptions) {
+  public static async makePaths(machine: AnyStateMachine, events: EventGenerator = new EventGenerator(), options: MakePathOptions = {}) {
     const pathGenerator = Path.generatePaths(machine, events, options);
     const paths = await arrayFromAsyncGenerator(pathGenerator);
 
@@ -174,7 +174,7 @@ export class Path {
     let currentState = this.machine.initialState;
     onTransition?.(currentState);
 
-    for (const segment of this.segments) {
+    for (const segment of this.segments.slice(1)) {
       currentState = await segment.run(currentState);
       onTransition?.(currentState);
     }

@@ -17,11 +17,12 @@
   "scripts": {
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npx typedoc",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@types/node": "^20.3.1",
+    "typedoc": "^0.24.8",
     "typescript": "^5.0.2",
     "vite": "^4.3.9",
     "vitest": "^0.32.2"

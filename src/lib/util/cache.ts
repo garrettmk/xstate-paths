@@ -11,8 +11,10 @@ const propertyCache = new WeakMap<any, Map<any, any>>();
  * @returns 
  */
 export function cache(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  target;
+  target; // To silence the unused variable error
 
+  // Replace the property getter with one that does
+  // a cache lookup first
   const originalGetter = descriptor.get;
 
   descriptor.get = function () {

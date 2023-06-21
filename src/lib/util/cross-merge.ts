@@ -1,6 +1,7 @@
 
 /**
- * Shallow-merges two arrays of objects, returning an array of objects with all possible combinations of the two.
+ * Shallow-merges two arrays of objects, returning a new array of objects with 
+ * all possible combinations of the two.
  * 
  * @param itemsLeft the array of original items
  * @param itemsRight the array of items to merge over the originals
@@ -16,6 +17,7 @@ export function crossMerge<TLeft extends object, TRight extends object = object>
  * 
  * @param itemsLeft 
  * @param itemsRight 
+ * @returns a generator of merged items
  */
 export function* crossMergeGenerator<TLeft extends object, TRight extends object = object>(itemsLeft: any[], itemsRight: any[]): Generator<(TRight & TLeft)> {
   for (const itemLeft of itemsLeft) {

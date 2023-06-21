@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { arrayFromAsyncGenerator, arrayFromGenerator, generatorFromArray } from './generators';
+import { arrayFromAsyncGenerator, arrayFromGenerator, generatorFromArray } from '@/lib/util/generators';
 
 
 describe('util', () => {

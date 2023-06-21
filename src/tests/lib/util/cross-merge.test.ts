@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { crossMerge, crossMergeGenerator } from './cross-merge';
+import { crossMerge, crossMergeGenerator } from '@/lib/util/cross-merge';
 
 describe('util', () => {
 

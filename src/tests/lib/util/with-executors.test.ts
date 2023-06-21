@@ -1,5 +1,5 @@
 import { AnyState } from 'xstate';
-import { Executor, withExecutors } from './with-executors';
+import { Executor, withExecutors } from '@/lib/util/with-executors';
 import { describe, expect, test, vi } from 'vitest';
 
 class MockExecutor implements Executor {

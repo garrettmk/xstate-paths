@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { cache } from './cache';
+import { cache } from '@/lib/util/cache';
 
 describe('util', () => {
   describe('cache', () => {

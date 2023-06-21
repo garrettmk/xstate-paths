@@ -1,5 +1,5 @@
 import { AnyState } from 'xstate';
-import { Executor } from './util';
+import { Executor } from '@/lib/types';
 
 export type EventExecFn = (event: string, state: AnyState) => void | Promise<void>;
 

@@ -1,5 +1,5 @@
 import { AnyEventObject, AnyState } from "xstate";
-import { generatorFromArray } from "./util/generators";
+import { generatorFromArray } from "@/lib/util";
 
 export type EventCreatorFn = () => AnyEventObject[];
 export type EventGeneratorFn = () => Generator<AnyEventObject>;

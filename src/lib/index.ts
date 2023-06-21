@@ -1,3 +1,4 @@
+export * from './types';
 export * from './util';
 export * from './event-source';
 export * from './segment';

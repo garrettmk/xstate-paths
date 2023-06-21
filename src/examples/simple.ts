@@ -1,5 +1,5 @@
 import { createMachine } from "xstate";
-import { withExecutors } from "../lib/util/with-executors";
+import { withExecutors } from "../lib/util/executors";
 import { EventExecutor } from "../lib/event-executor";
 import { EventSource } from "../lib/event-source";
 import { Path } from "../lib/path";
@@ -87,7 +87,7 @@ const execs = new EventExecutor({
 });
 
 const tests = new StateExecutor({
-  'one.left.b': (state) => { console.log('here') }
+  'one.left.b': () => { console.log('here') }
 });
 
 

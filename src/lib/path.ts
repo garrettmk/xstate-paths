@@ -1,7 +1,8 @@
 import { AnyState, AnyStateMachine } from "xstate";
-import { EventSource } from "./event-source";
-import { Segment } from "./segment";
-import { arrayFromAsyncGenerator } from "./util/generators";
+import { EventSource } from "@/lib/event-source";
+import { Segment } from "@/lib/segment";
+import { arrayFromAsyncGenerator } from "@/lib/util";
+import { OnTransitionFn } from "@/lib/types";
 
 
 /**
@@ -13,7 +14,6 @@ export type MakePathOptions = {
   maxLength?: number;
 }
 
-export type OnTransitionFn = (state: AnyState) => void | Promise<void>;
 
 
 /**

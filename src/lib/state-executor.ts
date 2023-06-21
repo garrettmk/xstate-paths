@@ -1,8 +1,9 @@
 import { AnyState } from "xstate";
+import { Executor } from "@/lib/types";
 
 export type StateExecFn = (state: AnyState) => void | Promise<void>;
 
-export class StateExecutor {
+export class StateExecutor implements Executor {
   public readonly execs: Map<string, StateExecFn>;
 
   public constructor(execs: Record<string, StateExecFn>) {

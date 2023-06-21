@@ -1,7 +1,7 @@
 import { isEmpty, omit } from "radash";
 import { AnyState, AnyStateMachine } from "xstate";
-import { EventSource } from "./event-source.js";
-import { cache } from "./util/index.js";
+import { EventSource } from "@/lib/event-source";
+import { cache } from "@/lib/util";
 
 
 /**

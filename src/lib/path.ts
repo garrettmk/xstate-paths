@@ -1,5 +1,5 @@
 import { AnyState, AnyStateMachine } from "xstate";
-import { EventGenerator } from "./event-map";
+import { EventSource } from "./event-source";
 import { Segment } from "./segment";
 import { arrayFromAsyncGenerator } from "./util/generators";
 
@@ -13,12 +13,8 @@ export type MakePathOptions = {
   maxLength?: number;
 }
 
-/**
- * Options for `Path.run`.
- */
-export type RunPathOptions = {
-  onTransition?: (state: AnyState) => void;
-}
+export type OnTransitionFn = (state: AnyState) => void | Promise<void>;
+
 
 /**
  * A path through a state machine.
@@ -33,7 +29,7 @@ export class Path {
    */
   public constructor(
     public readonly machine: AnyStateMachine,
-    protected readonly events: EventGenerator = new EventGenerator(),
+    protected readonly events: EventSource = new EventSource(),
     public readonly segments: Segment[] = []
   ) {
     if (!segments.length) {
@@ -50,7 +46,7 @@ export class Path {
    * @param options 
    * @returns 
    */
-  public static async makePaths(machine: AnyStateMachine, events: EventGenerator = new EventGenerator(), options: MakePathOptions = {}) {
+  public static async makePaths(machine: AnyStateMachine, events: EventSource = new EventSource(), options: MakePathOptions = {}) {
     const pathGenerator = Path.generatePaths(machine, events, options);
     const paths = await arrayFromAsyncGenerator(pathGenerator);
 
@@ -64,7 +60,7 @@ export class Path {
    * @param events 
    * @param options 
    */
-  public static async * generatePaths(machine: AnyStateMachine, events: EventGenerator, options?: MakePathOptions) {
+  public static async * generatePaths(machine: AnyStateMachine, events: EventSource, options?: MakePathOptions) {
     const {
       filterPath = Path.defaultPathFilter,
     } = options ?? {};
@@ -100,6 +96,17 @@ export class Path {
     }
 
     return deduplicatedPaths.reverse();
+  }
+
+  /**
+   * Runs each path in the iterable with onTransition.
+   * 
+   * @param paths 
+   * @param onTransition 
+   */
+  public static async runPaths(paths: Path[] | Generator<Path>, onTransition?: OnTransitionFn) {
+    for (const path of paths)
+      path.run(onTransition);
   }
 
   /**
@@ -168,15 +175,13 @@ export class Path {
    * 
    * @param options 
    */
-  public async run(options?: RunPathOptions) {
-    const { onTransition } = options ?? {};
-
+  public async run(onTransition?: OnTransitionFn): Promise<void> {
     let currentState = this.machine.initialState;
-    onTransition?.(currentState);
+    await onTransition?.(currentState);
 
     for (const segment of this.segments.slice(1)) {
       currentState = await segment.run(currentState);
-      onTransition?.(currentState);
+      await onTransition?.(currentState);
     }
   }
 

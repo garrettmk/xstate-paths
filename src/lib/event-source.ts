@@ -4,13 +4,13 @@ import { generatorFromArray } from "./util/generators";
 export type EventCreatorFn = () => AnyEventObject[];
 export type EventGeneratorFn = () => Generator<AnyEventObject>;
 
-export type EventSource = AnyEventObject[] | EventCreatorFn | EventGeneratorFn;
+export type EventSourceArg = AnyEventObject[] | EventCreatorFn | EventGeneratorFn;
 
 export interface EventSourceMap {
-  [type: string]: EventSource
+  [type: string]: EventSourceArg
 }
 
-export class EventGenerator {
+export class EventSource {
   protected sources: Map<string, EventGeneratorFn>;
 
   public constructor(public readonly options: EventSourceMap = {}) {
@@ -53,7 +53,7 @@ export class EventGenerator {
    * @param source 
    * @returns 
    */
-  protected getGenerator(source: EventSource): EventGeneratorFn {
+  protected getGenerator(source: EventSourceArg): EventGeneratorFn {
     if (Array.isArray(source))
       return () => generatorFromArray(source);
 

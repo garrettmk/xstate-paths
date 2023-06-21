@@ -1,6 +1,6 @@
 import { isEmpty, omit } from "radash";
 import { AnyState, AnyStateMachine } from "xstate";
-import { EventGenerator } from "./event-map.js";
+import { EventSource } from "./event-source.js";
 import { cache } from "./util/index.js";
 
 
@@ -19,7 +19,7 @@ export class Segment {
   public constructor(
     public readonly machine: AnyStateMachine,
     public readonly state: AnyState = machine.initialState,
-    public readonly events: EventGenerator = new EventGenerator(),
+    public readonly events: EventSource = new EventSource(),
   ) { }
 
   /**

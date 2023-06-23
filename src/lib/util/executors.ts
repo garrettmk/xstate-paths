@@ -6,7 +6,7 @@ import { OnTransitionFn, Executor } from "@/lib/types";
  * Returns an `OnTransitionFn` that calls the given executors in order.
  * 
  * @param executors 
- * @returns an `OnTransitionFn`
+ * @returns
  * 
  * @example
  * ```ts

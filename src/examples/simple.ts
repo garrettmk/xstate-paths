@@ -92,7 +92,9 @@ const tests = new StateExecutor({
 
 
 console.time('makePaths');
-const paths = await Path.makePaths(machine, events);
+const paths = await Path.makePaths(machine, {
+  eventSource: events,
+});
 console.timeEnd('makePaths');
 console.log(paths.length);
 

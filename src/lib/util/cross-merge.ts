@@ -23,7 +23,7 @@
  * // ]
  * ```
  */
-export function crossMerge<TLeft extends object, TRight extends object = object>(itemsLeft: any[], itemsRight: any[]): (TRight & TLeft)[] {
+export function crossMerge<TLeft extends object, TRight extends object>(itemsLeft: any[], itemsRight: any[]): (TRight & TLeft)[] {
   return Array.from(crossMergeGenerator<TLeft, TRight>(itemsLeft, itemsRight));
 }
 
@@ -51,7 +51,7 @@ export function crossMerge<TLeft extends object, TRight extends object = object>
  * // { a: 2, b: 2 }
  * ```
  */
-export function* crossMergeGenerator<TLeft extends object, TRight extends object = object>(itemsLeft: any[], itemsRight: any[]): Generator<(TRight & TLeft)> {
+export function* crossMergeGenerator<TLeft extends object, TRight extends object>(itemsLeft: any[], itemsRight: any[]): Generator<(TRight & TLeft)> {
   for (const itemLeft of itemsLeft) {
     for (const itemRight of itemsRight) {
       yield { ...itemLeft, ...itemRight };

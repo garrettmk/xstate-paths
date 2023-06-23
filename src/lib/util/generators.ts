@@ -2,8 +2,8 @@
 /**
  * Create an array from an async generator.
  * 
- * @param generator A generator for `Promise<T>`s
- * @returns A Promise for an array of `T`s
+ * @param generator
+ * @returns
  * 
  * @example
  * ```ts
@@ -32,8 +32,8 @@ export async function arrayFromAsyncGenerator<T>(generator: AsyncGenerator<T>): 
 /**
  * Create a generator from an array.
  * 
- * @param source An array of `T`s
- * @returns A generator for `T`s
+ * @param source
+ * @returns
  * 
  * @example
  * ```ts
@@ -58,8 +58,8 @@ export function* generatorFromArray<T>(source: T[]): Generator<T> {
 /**
  * Creates a generator from a generator
  * 
- * @param source A generator for `T`s
- * @returns An array of `T`s
+ * @param source
+ * @returns
  * 
  * @example
  * ```ts

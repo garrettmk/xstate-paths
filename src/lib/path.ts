@@ -9,9 +9,34 @@ import { OnTransitionFn } from "@/lib/types";
  * Options for `Path.makePaths`.
  */
 export type MakePathOptions = {
-  filterSegment?: (segment: Segment, path: Path) => boolean;
-  filterPath?: (path: Path) => boolean;
+  /**
+   * An `EventSource` that is used to generate events for the path.
+   */
+  eventSource?: EventSource;
+
+  /**
+   * The maximum number of segments a path can have.
+   */
   maxLength?: number;
+
+  /**
+   * Filters segments during path generation. If `filterSegment` returns `false`,
+   * the segment is not added to the path and the path ends.
+   * 
+   * @param segment 
+   * @param path 
+   * @returns 
+   */
+  filterSegment?: (segment: Segment, path: Path) => boolean;
+
+  /**
+   * Filters paths during path generation. If `filterPath` returns `false`, the
+   * path is not included in the result.
+   * 
+   * @param path 
+   * @returns 
+   */
+  filterPath?: (path: Path) => boolean;
 }
 
 
@@ -29,11 +54,10 @@ export class Path {
    */
   public constructor(
     public readonly machine: AnyStateMachine,
-    protected readonly events: EventSource = new EventSource(),
     public readonly segments: Segment[] = []
   ) {
     if (!segments.length) {
-      const initialSegment = new Segment(machine, machine.initialState, events);
+      const initialSegment = new Segment(machine, machine.initialState);
       this.segments.push(initialSegment);
     }
   }
@@ -46,8 +70,8 @@ export class Path {
    * @param options 
    * @returns 
    */
-  public static async makePaths(machine: AnyStateMachine, events: EventSource = new EventSource(), options: MakePathOptions = {}) {
-    const pathGenerator = Path.generatePaths(machine, events, options);
+  public static async makePaths(machine: AnyStateMachine, options: MakePathOptions = {}) {
+    const pathGenerator = Path.generatePaths(machine, options);
     const paths = await arrayFromAsyncGenerator(pathGenerator);
 
     return paths;
@@ -60,12 +84,12 @@ export class Path {
    * @param events 
    * @param options 
    */
-  public static async * generatePaths(machine: AnyStateMachine, events: EventSource, options?: MakePathOptions) {
+  public static async * generatePaths(machine: AnyStateMachine, options?: MakePathOptions) {
     const {
       filterPath = Path.defaultPathFilter,
     } = options ?? {};
 
-    const pathToInitialState = new Path(machine, events);
+    const pathToInitialState = new Path(machine);
 
     if (filterPath(pathToInitialState))
       yield pathToInitialState;
@@ -117,9 +141,9 @@ export class Path {
   public async * generateNextPaths(options?: MakePathOptions): AsyncGenerator<Path> {
     // Get options with defaults
     const {
+      maxLength = 10,
       filterSegment = Path.defaultSegmentFilter,
       filterPath = Path.defaultPathFilter,
-      maxLength = 10,
     } = options ?? {};
 
     // Get the next possible segments
@@ -130,11 +154,7 @@ export class Path {
       if (!filterSegment(nextSegment, this))
         continue;
 
-      const nextPath = new Path(
-        this.machine,
-        this.events,
-        this.segments.concat(nextSegment)
-      );
+      const nextPath = new Path(this.machine, this.segments.concat(nextSegment));
 
       // If the path passes the filter, yield it
       if (filterPath(nextPath))

@@ -1,18 +1,55 @@
 import { AnyEventObject, AnyState } from "xstate";
 import { generatorFromArray } from "@/lib/util";
 
+/**
+ * A function that returns event objects.
+ */
 export type EventCreatorFn = () => AnyEventObject[];
+
+/**
+ * A function that returns a generator that yields event objects.
+ */
 export type EventGeneratorFn = () => Generator<AnyEventObject>;
 
+/**
+ * An source of event objects.
+ */
 export type EventSourceArg = AnyEventObject[] | EventCreatorFn | EventGeneratorFn;
 
 export interface EventSourceMap {
   [type: string]: EventSourceArg
 }
 
+/**
+ * `EventSource` provides generators that yield event objects. It is used by
+ * `Segment` to generate possible events that will cause a state to transition.
+ */
 export class EventSource {
   protected sources: Map<string, EventGeneratorFn>;
 
+  /**
+   * Create an `EventSource` from the given options.
+   * 
+   * @param options 
+   * 
+   * @example
+   * ```ts
+   * const source = new EventSource({
+   *  INPUT: [
+   *    { type: "INPUT", payload: { value: "foo" } },
+   *    { type: "INPUT", payload: { value: "bar" } },
+   *  ],
+   * 
+   *  SUBMIT: [{ type: "SUBMIT" }],
+   *  
+   *  CANCEL: [{ type: "CANCEL" }],
+   * 
+   *  OTHER: function* () {
+   *    yield { type: "OTHER", payload: { value: "baz" } };
+   *    yield { type: "OTHER", payload: { value: "qux" } };
+   *  }
+   * });
+   */
   public constructor(public readonly options: EventSourceMap = {}) {
     this.sources = new Map();
 
@@ -21,7 +58,7 @@ export class EventSource {
   }
 
   /**
-   * Returns a generator that yields all events that will cause `fromState` to transition.
+   * Yields all events that can be sent to `fromState`.
    * 
    * @param fromState 
    */
@@ -33,7 +70,7 @@ export class EventSource {
   }
 
   /**
-   * Returns a generator that yields events of the given type.
+   * Yields events of the given type.
    * 
    * @param type 
    */
@@ -48,6 +85,8 @@ export class EventSource {
   }
 
   /**
+   * @internal
+   * 
    * Returns an `EventGeneratorFn` for the given source.
    * 
    * @param source 

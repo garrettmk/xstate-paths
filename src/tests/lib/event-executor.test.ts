@@ -42,7 +42,7 @@ describe("EventExecutor", () => {
 
       await executor.exec(state);
 
-      expect(options.EVENT1).toHaveBeenCalledWith(event.type, state);
+      expect(options.EVENT1).toHaveBeenCalledWith(event, state);
     });
   });  
 });

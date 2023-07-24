@@ -4,7 +4,7 @@ import { Executor } from '@/lib/types';
 /**
  * A function that executes an event.
  */
-export type EventExecFn = (event: string, state: AnyState) => void | Promise<void>;
+export type EventExecFn = (event: EventObject, state: AnyState) => void | Promise<void>;
 
 /**
  * An executor for events. On each transition, the executor will execute the
@@ -38,6 +38,6 @@ export class EventExecutor implements Executor {
    */
   public async exec(state: AnyState) {
     const event = state.event as EventObject;
-    await this.execs.get(event.type)?.(event.type, state);
+    await this.execs.get(event.type)?.(event, state);
   }
 }

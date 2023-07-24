@@ -144,10 +144,11 @@ export class Path {
       maxLength = 10,
       filterSegment = Path.defaultSegmentFilter,
       filterPath = Path.defaultPathFilter,
+      eventSource,
     } = options ?? {};
 
     // Get the next possible segments
-    const nextSegments = await this.lastSegment?.generateNextSegments() ?? [];
+    const nextSegments = await this.lastSegment?.generateNextSegments(eventSource) ?? [];
 
     // Make a path for each next segment that passes the filter
     for await (const nextSegment of nextSegments) {

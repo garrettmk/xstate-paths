@@ -1,5 +1,6 @@
 import { AnyState } from "xstate";
-import { OnTransitionFn, Executor } from "@/lib/types";
+import { OnTransitionFn } from "@/lib/types";
+import { Executor } from "./types";
 
 
 /**

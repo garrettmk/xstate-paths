@@ -1,9 +1,9 @@
 import { createMachine } from "xstate";
-import { withExecutors } from "../lib/util/executors";
+import { withExecutors } from "../lib/executors/with-executors";
 import { EventExecutor } from "../lib/event-executor";
 import { EventSource } from "../lib/event-source";
 import { Path } from "../lib/path";
-import { StateExecutor } from "../lib/state-executor";
+import { StateExecutor } from "../lib/executors/state-executor";
 
 const machine = createMachine({
   id: 'simple-machine',

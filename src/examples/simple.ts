@@ -1,9 +1,8 @@
 import { createMachine } from "xstate";
-import { withExecutors } from "../lib/executors/with-executors";
-import { EventExecutor } from "../lib/event-executor";
 import { EventSource } from "../lib/event-source";
 import { Path } from "../lib/path";
-import { StateExecutor } from "../lib/executors/state-executor";
+import { TransitionCallbackMap } from "../lib/path-runner";
+import { TestRunner } from "@/lib/test-runner";
 
 const machine = createMachine({
   id: 'simple-machine',
@@ -82,13 +81,15 @@ const events = new EventSource({
   },
 });
 
-const execs = new EventExecutor({
-  A_TO_B: (event) => console.log(event)
-});
+const eventCallbacks: TransitionCallbackMap = {
+  'A_TO_B': (event) => console.log(event),
+  'TO_FOUR': (event) => console.log(event),
+};
 
-const tests = new StateExecutor({
+const stateCallbacks: TransitionCallbackMap = {
   'one.left.b': () => { console.log('here') }
-});
+};
+
 
 
 console.time('makePaths');
@@ -98,4 +99,5 @@ const paths = await Path.makePaths(machine, {
 console.timeEnd('makePaths');
 console.log(paths.length);
 
-paths[0].run(withExecutors(execs, tests));
+const runner = new TestRunner(eventCallbacks, stateCallbacks);
+await runner.run(paths[0]);

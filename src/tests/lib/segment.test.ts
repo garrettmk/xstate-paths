@@ -56,24 +56,6 @@ describe("Segment", () => {
     });
   });
 
-  describe('run', () => {
-    const middleState = testMachine.transition(testMachine.initialState, 'NEXT');    
-    const middleSegment = new Segment(testMachine, middleState);
-
-    test('runs the segment\'s event on the given state', async () => {
-      const initialState = testMachine.initialState;
-
-      const nextState = await middleSegment.run(initialState);
-
-      expect(nextState.event.type).toEqual(middleSegment.event.type);
-      expect(nextState.value).toEqual(middleSegment.state.value);
-    });
-
-    test('throws an error if the resulting state does not match the target state', async () => {
-      await expect(middleSegment.run(middleState)).rejects.toThrowError();
-    });
-  });
-
   describe('generateNextSegments', () => {
     const middleState = testMachine.transition(testMachine.initialState, 'NEXT');    
     const middleSegment = new Segment(testMachine, middleState);

@@ -1,8 +1,7 @@
-import { AnyState, AnyStateMachine } from "xstate";
 import { EventSource } from "@/lib/event-source";
 import { Segment } from "@/lib/segment";
 import { arrayFromAsyncGenerator } from "@/lib/util";
-import { OnTransitionFn } from "@/lib/types";
+import { AnyState, AnyStateMachine } from "xstate";
 
 
 /**
@@ -18,6 +17,11 @@ export type MakePathOptions = {
    * The maximum number of segments a path can have.
    */
   maxLength?: number;
+
+  /**
+   * Whether to use Path.deduplicate() on the resulting set of paths.
+   */
+  deduplicate?: boolean;
 
   /**
    * Filters segments during path generation. If `filterSegment` returns `false`,
@@ -74,7 +78,10 @@ export class Path {
     const pathGenerator = Path.generatePaths(machine, options);
     const paths = await arrayFromAsyncGenerator(pathGenerator);
 
-    return paths;
+    if (options.deduplicate)
+      return Path.deduplicate(paths);
+    else
+      return paths;
   }
 
   /**
@@ -120,17 +127,6 @@ export class Path {
     }
 
     return deduplicatedPaths.reverse();
-  }
-
-  /**
-   * Runs each path in the iterable with onTransition.
-   * 
-   * @param paths 
-   * @param onTransition 
-   */
-  public static async runPaths(paths: Path[] | Generator<Path>, onTransition?: OnTransitionFn) {
-    for (const path of paths)
-      path.run(onTransition);
   }
 
   /**
@@ -187,23 +183,6 @@ export class Path {
    */
   public static defaultPathFilter(path: Path) {
     return path.isFinal();
-  }
-
-
-  /**
-   * Run the path. At each step, the `onTransition` callback is called with the
-   * current state (this includes the initial state).
-   * 
-   * @param options 
-   */
-  public async run(onTransition?: OnTransitionFn): Promise<void> {
-    let currentState = this.machine.initialState;
-    await onTransition?.(currentState);
-
-    for (const segment of this.segments.slice(1)) {
-      currentState = await segment.run(currentState);
-      await onTransition?.(currentState);
-    }
   }
 
 

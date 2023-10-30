@@ -43,26 +43,6 @@ export class Segment {
   ) { }
 
   /**
-   * Applies the segment's event to the given state and returns the resulting state.
-   * Will throw an error if the resulting state does not match the segment's target state.
-   * 
-   * @param state The starting state.
-   * @returns the resulting state.
-   * 
-   * @example
-   * ```ts
-   * const nextState = await segment.run(currentState);
-   * ```
-   */
-  public async run(state: AnyState) {
-    const nextState = await this.applyEvent(state);
-    this.assertMatchesTarget(nextState);
-
-    return nextState;
-  }
-
-
-  /**
    * Generates all possible segments that can follow this segment.
    * 
    * @param eventSource 
@@ -268,45 +248,5 @@ export class Segment {
    */
   public isFinal() {
     return this.state.done || this.state.nextEvents.length === 0;
-  }
-
-
-  /**
-   * Applies the segment's `event` to the given state and returns the
-   * resulting state.
-   * 
-   * @param state 
-   * @returns 
-   */
-  protected async applyEvent(state: AnyState): Promise<AnyState> {
-    const nextState = this.machine.transition(state, this.event);
-    await this.runActions(nextState);
-
-    return nextState;
-  }
-
-  /**
-   * Throws an error unless the given `state` matches the segment's
-   * target state.
-   * 
-   * @param state 
-   */
-  protected assertMatchesTarget(state: AnyState) {
-    if (!this.state.matches(state.value))
-      throw new Error(`Expected state to be ${this.state.value}, but was ${state.value}`);
-  }
-
-  /**
-   * Runs the state's `actions`.
-   * 
-   * @param state 
-   */
-  protected async runActions(state: AnyState) {
-    const { actions, context, event, meta } = state;
-
-    for (const action of actions) {
-      if (typeof action.exec === 'function')
-        await action.exec(context, event, meta);
-    }
   }
 }

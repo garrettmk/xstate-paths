@@ -10,13 +10,17 @@ export default defineConfig({
     tsconfigPaths(),
     dts({
       insertTypesEntry: true,
+      exclude: ['src/tests', 'src/examples']
     })
   ],
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'xstate-paths',
-      fileName: format => `xstate-paths.${format}.js`
+      fileName: format => ({
+        es: 'xstate-paths.es.js',
+        umd: 'xstate-paths.umd.cjs',
+      }[format])
     },
     rollupOptions: {
       external: ['xstate'],

@@ -23,7 +23,7 @@
  * // ]
  * ```
  */
-export function crossMerge<TLeft extends object, TRight extends object>(itemsLeft: any[], itemsRight: any[]): (TRight & TLeft)[] {
+export function crossMerge<TLeft extends object, TRight extends object = TLeft>(itemsLeft: any[], itemsRight: any[]): (TRight & TLeft)[] {
   return Array.from(crossMergeGenerator<TLeft, TRight>(itemsLeft, itemsRight));
 }
 
